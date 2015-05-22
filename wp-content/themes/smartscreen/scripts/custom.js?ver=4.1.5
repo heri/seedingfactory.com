@@ -1,0 +1,320 @@
+jQuery.noConflict();
+
+//** Smooth Navigational Menu- By Dynamic Drive DHTML code library: http://www.dynamicdrive.com
+//** Script Download/ instructions page: http://www.dynamicdrive.com/dynamicindex1/ddlevelsmenu/
+//** Menu created: Nov 12, 2008
+
+var ddsmoothmenu = {
+
+//Specify full URL to down and right arrow images (23 is padding-right added to top level LIs with drop downs):
+    transition:{overtime:300, outtime:300}, //duration of slide in/ out animation, in milliseconds
+    showhidedelay:{showdelay:100, hidedelay:200}, //set delay in milliseconds before sub menus appear and disappear, respectively
+
+///////Stop configuring beyond here///////////////////////////
+
+    detectwebkit:navigator.userAgent.toLowerCase().indexOf("applewebkit") != -1, //detect WebKit browsers (Safari, Chrome etc)
+    detectie6:document.all && !window.XMLHttpRequest,
+
+    getajaxmenu:function ($, setting) { //function to fetch external page containing the panel DIVs
+        var $menucontainer = jQuery('#' + setting.contentsource[0]) //reference empty div on page that will hold menu
+        $menucontainer.html("Loading Menu...")
+        $.ajax({
+            url:setting.contentsource[1], //path to external menu file
+            async:true,
+            error:function (ajaxrequest) {
+                $menucontainer.html('Error fetching content. Server Response: ' + ajaxrequest.responseText)
+            },
+            success:function (content) {
+                $menucontainer.html(content)
+                ddsmoothmenu.buildmenu($, setting)
+            }
+        })
+    },
+
+
+    buildmenu:function ($, setting) {
+        var smoothmenu = ddsmoothmenu
+        var $mainmenu = jQuery("#" + setting.mainmenuid + ">ul") //reference main menu UL
+        $mainmenu.parent().get(0).className = setting.classname || "ddsmoothmenu"
+        var $headers = $mainmenu.find("ul").parent()
+        $headers.hover(
+            function (e) {
+                jQuery(this).children('a:eq(0)').addClass('selected')
+            },
+            function (e) {
+                jQuery(this).children('a:eq(0)').removeClass('selected')
+            }
+        )
+        $headers.each(function (i) { //loop through each LI header
+            var $curobj = jQuery(this).css({zIndex:100 - i}) //reference current LI header
+            var $subul = jQuery(this).find('ul:eq(0)').css({display:'block'})
+            $subul.data('timers', {})
+            this._dimensions = {w:this.offsetWidth, h:this.offsetHeight, subulw:$subul.outerWidth(), subulh:$subul.outerHeight()}
+            this.istopheader = $curobj.parents("ul").length == 1 ? true : false //is top level header?
+            $subul.css({top:this.istopheader && setting.orientation != 'v' ? this._dimensions.h + "px" : 0})
+
+            $curobj.hover(
+                function (e) {
+                    var $targetul = $subul //reference UL to reveal
+                    var header = $curobj.get(0) //reference header LI as DOM object
+                    clearTimeout($targetul.data('timers').hidetimer)
+                    $targetul.data('timers').showtimer = setTimeout(function () {
+                        header._offsets = {left:$curobj.offset().left, top:$curobj.offset().top}
+                        var menuleft = header.istopheader && setting.orientation != 'v' ? 0 : header._dimensions.w
+                        menuleft = (header._offsets.left + menuleft + header._dimensions.subulw > jQuery(window).width()) ? (header.istopheader && setting.orientation != 'v' ? -header._dimensions.subulw + header._dimensions.w : -header._dimensions.w) : menuleft //calculate this sub menu's offsets from its parent
+                        if ($targetul.queue().length <= 1) { //if 1 or less queued animations
+                            $targetul.css({left:menuleft + "px", width:header._dimensions.subulw + 'px'}).animate({height:'show', opacity:'show'}, ddsmoothmenu.transition.overtime)
+                        }
+                    }, ddsmoothmenu.showhidedelay.showdelay)
+                },
+                function (e) {
+                    var $targetul = $subul
+                    var header = $curobj.get(0)
+                    clearTimeout($targetul.data('timers').showtimer)
+                    $targetul.data('timers').hidetimer = setTimeout(function () {
+                        $targetul.animate({height:'hide', opacity:'hide'}, ddsmoothmenu.transition.outtime)
+                    }, ddsmoothmenu.showhidedelay.hidedelay)
+                }
+            ) //end hover
+        }) //end $headers.each()
+
+        $mainmenu.find("ul").css({display:'none', visibility:'visible'})
+    },
+
+    init:function (setting) {
+        if (typeof setting.customtheme == "object" && setting.customtheme.length == 2) { //override default menu colors (default/hover) with custom set?
+            var mainmenuid = '#' + setting.mainmenuid
+                var mainselector = (setting.orientation == "v") ? mainmenuid : mainmenuid + ', ' + mainmenuid
+                document.write('<style type="text/css">\n'
+                    + mainselector + ' ul li a {background:' + setting.customtheme[0] + ';}\n'
+                    + mainmenuid + ' ul li a:hover {background:' + setting.customtheme[1] + ';}\n'
+                    + '</style>')
+
+
+        }
+        jQuery(document).ready(function ($) { //ajax menu?
+            if (typeof setting.contentsource == "object") { //if external ajax menu
+                ddsmoothmenu.getajaxmenu($, setting)
+            }
+            else { //else if markup menu
+                ddsmoothmenu.buildmenu($, setting)
+            }
+        })
+    }
+
+}; //end ddsmoothmenu variable
+
+
+
+jQuery(document).ready(function () { //#Begin
+
+
+    ddsmoothmenu.init({
+        mainmenuid:"nav", //Menu DIV id
+        orientation:'v', //Horizontal or vertical menu: Set to "h" or "v"
+        classname:'jqueryslidemenu', //class added to menu's outer DIV
+        contentsource:"markup" //"markup" or ["container_id", "path_to_menu_file"]
+    });
+
+    ddsmoothmenu.init({
+        mainmenuid:"nav-horizontal", //Menu DIV id
+        orientation:'h', //Horizontal or vertical menu: Set to "h" or "v"
+        contentsource:"markup" //"markup" or ["container_id", "path_to_menu_file"]
+    });
+
+
+
+    /*** [Testimonials] ***/
+    /* -------------------------------------------------------------------------------- */
+    jQuery('.sc-testimonials .flexslider').flexslider({
+        animation:"fade",
+        animationLoop:true,
+        maxItems:1,
+        move:1,
+        directionNav:false,
+        controlNav:true,
+        slideshow:false
+    });
+
+
+    /*** [ToolTip] ***/
+    /* -------------------------------------------------------------------------------- */
+    jQuery(".tooltip_sc").tooltip({ relative:true, offset:[5, 0], tipClass:'tool_tip' });
+
+    /*** [Slideshow Shortcode] ***/
+    /* -------------------------------------------------------------------------------- */
+    jQuery('.slideshow-sc').flexslider({
+        directionNav:true,
+        pauseOnHover:true,
+        controlsContainer:'.flex-container'
+    });
+
+    /*** [Tab] ***/
+    /* -------------------------------------------------------------------------------- */
+    jQuery("ul.tabs-titles").tabs("> .tab-content");
+    jQuery(".accordion").tabs(".acc-item .acc-content", {tabs:'h3', effect:'slide', initialIndex:null});
+
+    /*** [Toggle] ***/
+    /* -------------------------------------------------------------------------------- */
+    jQuery(".toggle-body").hide();
+    jQuery(".toggle-head").click(function () {
+        var tb = jQuery(this).next(".toggle-body");
+
+        if (tb.is(':hidden')) {
+            tb.prev('.toggle-head').children('h3').addClass('minus');
+            tb.slideDown('slow');
+
+        }
+        else {
+            tb.slideUp(200, function () {
+                tb.prev('.toggle-head').children('h3').removeClass('minus');
+            });
+        }
+    });
+
+
+    function frameHover () {
+        var frame_img = jQuery(this).find('img');
+        var frame_ico = jQuery(this).find('.zoom,.video');
+        jQuery(this).hover(function(){
+            jQuery(frame_img).stop(true, true).animate({top:50}, '5000', 'swing');
+            jQuery(frame_ico).stop(true, true).animate({top:0}, '5000', 'swing');
+        }, function(){
+            jQuery(frame_img).stop(true, true).animate({top:0}, '5000', 'swing');
+            jQuery(frame_ico).stop(true, true).animate({top:-99}, '5000', 'swing');
+
+        });
+    }
+    jQuery('.frame').each(frameHover);
+
+    jQuery('.home #shutdown').click(function(){
+        if(jQuery(this).attr('class') == 'active') {
+            jQuery('#menu-wrap,  .social-in-homepage, #slidecaption, #wrap').fadeIn();
+            jQuery(this).removeClass('active');
+        } else {
+            jQuery('#menu-wrap, .social-in-homepage, #slidecaption, #wrap').fadeOut();
+            jQuery(this).addClass('active');
+        }
+    });
+
+    jQuery('#tray-button').click(function(){
+        if(jQuery(this).attr('class') == 'active') {
+            jQuery('#slidecaption').fadeIn();
+            jQuery(this).removeClass('active');
+        } else {
+            jQuery('#slidecaption').fadeOut();
+            jQuery(this).addClass('active');
+        }
+    });
+
+    jQuery('#menu-toggle').click(function(){
+        var menu_height = jQuery('#menu-wrap').height() + 50;
+        if(jQuery(this).attr('class') == 'active') {
+            jQuery('#menu-wrap').stop(true, true).animate({top:0}, '5000', 'swing');
+            jQuery(this).removeClass('active');
+        } else {
+            jQuery('#menu-wrap').stop(true, true).animate({top:-menu_height}, '5000', 'swing');
+            jQuery(this).addClass('active');
+        }
+    });
+
+    jQuery('#entries-toggle').click(function(){
+        var sidebar_height = jQuery('#sidebar').height() + 50;
+        if(jQuery(this).attr('class') == 'active') {
+            jQuery('#entries-box').slideDown();
+            jQuery('#sidebar').stop(true, true).animate({top:0}, '5000', 'swing');
+            jQuery(this).removeClass('active');
+        } else {
+            jQuery('#entries-box').slideUp();
+            jQuery('#sidebar').stop(true, true).animate({top:-sidebar_height}, '5000', 'swing');
+            jQuery(this).addClass('active');
+        }
+    });
+    jQuery('#folio-single-slideshow').flexslider({
+        animation:'fade',
+        directionNav:false,
+        slideshowSpeed:6000,
+        controlsContainer:'.flex-container'
+    });
+
+    /*** [Filterable] ***/
+    /* -------------------------------------------------------------------------------- */
+    var $container = jQuery('.filterable');
+    jQuery.browser.chrome = jQuery.browser.webkit && !!window.chrome;
+    jQuery.browser.safari = jQuery.browser.webkit && !window.chrome;
+
+    if(jQuery.browser.chrome || jQuery.browser.safari){
+        jQuery(window).load(function() {
+            $container.isotope('reLayout');
+        });
+        $container.isotope({
+            filter:'*',
+            layoutMode:'fitRows',
+            transformsEnabled: false
+        });
+    }
+ else {
+        $container.isotope({
+            filter:'*',
+            layoutMode:'fitRows'
+        });
+    }
+
+    jQuery('.filters a').click(function () {
+        var selector = jQuery(this).attr('data-filter');
+        $container.isotope({ filter:selector });
+        return false;
+    });
+
+    /*** [Contact Form] ***/
+    /* -------------------------------------------------------------------------------- */
+    jQuery('form#contactform').submit(function () {
+
+        jQuery.post(jQuery("#contactform").attr('action'), jQuery("#contactform").serialize(), function (data) {
+            jQuery('.log').html(data);
+            jQuery('.loading').remove();
+            if (jQuery('.info-box-wrapper').hasClass('success')) {
+                jQuery('#contactform').slideUp('slow');
+            }
+        });
+
+        return false;
+    });
+
+
+    /*** [Responsive Menu] ***/
+    /* -------------------------------------------------------------------------------- */
+    jQuery('#nav-toggle').click(function () {
+        var nav_att = jQuery('#nav-toggle-content').css('display');
+        if (nav_att == 'block') {
+            jQuery('#nav-toggle-content').slideUp('slow');
+        } else {
+            jQuery('#nav-toggle-content').slideDown('slow').css('display', 'block');
+        }
+    });
+
+    /*** [Smooth Scrolling] ***/
+    /* http://github.com/kswedberg/jquery-smooth-scroll */
+    /* -------------------------------------------------------------------------------- */
+
+    jQuery(window).scroll(function(){
+        if (jQuery(this).scrollTop() > 100) {
+            jQuery('#scrollup').fadeIn();
+        } else {
+            jQuery('#scrollup').fadeOut();
+        }
+    });
+
+    jQuery("a[href*=#wrap],#scrollup").click(function (document) {
+        if (jQuery.browser.opera) {
+            jQuery("html").animate({scrollTop:0}, "slow");
+        } else {
+            jQuery("html, body").animate({scrollTop:0}, "slow");
+        }
+    });
+
+
+
+}); //#END
+
+
