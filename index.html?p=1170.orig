@@ -39,7 +39,7 @@
 <link rel="alternate" type="application/rss+xml" title="SeedingFactory &raquo; Feed" href="http://seedingfactory.com/feed/" />
 <link rel="alternate" type="application/rss+xml" title="SeedingFactory &raquo; Comments Feed" href="http://seedingfactory.com/comments/feed/" />
 <link rel="alternate" type="application/rss+xml" title="SeedingFactory &raquo; 4 ways crowdfunding can make your creative project succeed Comments Feed" href="http://seedingfactory.com/2013/11/4-ways-crowdfunding-can-make-your-creative-project-succeed/feed/" />
-<link rel='stylesheet' id='simple-pagination-css-css'  href='http://seedingfactory.com/wp-content/plugins/simple-pagination/css/grey.css?ver=2.1.7' type='text/css' media='screen' />
+<link rel='stylesheet' id='simple-pagination-css-css'  href='' type='text/css' media='screen' />
 <script type='text/javascript' src='http://seedingfactory.com/wp-includes/js/jquery/jquery.js?ver=1.11.1'></script>
 <script type='text/javascript' src='http://seedingfactory.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
 <script type='text/javascript' src='http://seedingfactory.com/wp-content/themes/smartscreen/scripts/jquery.easing.1.3.js?ver=1.3'></script>
@@ -190,7 +190,7 @@ jQuery(document).ready(function () {
                     // Components
                     slide_links				:	'blank',	// Individual links for each slide (Options: false, 'num', 'name', 'blank')
                     slides 					:  	[			// Slideshow Images
-                    {image : 'http://seedingfactory.com/wp-content/uploads/2013/05/TheSuccessfulPathToGetCrowdfunded-V04.png', title : '<div class="slider-caption"><h2>Successful path to get crowdfunded &#8211; Featured on</h2><p>Seeding Factory provides ressources, tools, tips, trainings, workshops and advices  for doers, entrepreneurs, creatives or makers willing to imagine, build, launch and manage a successful crowdfunding campaign.</p></div>',  thumb : 'http://seedingfactory.com/wp-content/uploads/2013/05/TheSuccessfulPathToGetCrowdfunded-V04.png', url : ''}                     ]
+                    {image : 'http://seedingfactory.com/TheSuccessfulPathToGetCrowdfunded-V04.png', title : '<div class="slider-caption"><h2>Successful path to get crowdfunded &#8211; Featured on</h2><p>Seeding Factory provides ressources, tools, tips, trainings, workshops and advices  for doers, entrepreneurs, creatives or makers willing to imagine, build, launch and manage a successful crowdfunding campaign.</p></div>',  thumb : 'http://seedingfactory.com/TheSuccessfulPathToGetCrowdfunded-V04.png', url : ''}                     ]
 
                 });
             }
